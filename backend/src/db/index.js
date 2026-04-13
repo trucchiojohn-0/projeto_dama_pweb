@@ -19,4 +19,4 @@ const query = async (req, res) => {
     return res
 }
 
-module.exports = {connection, query}
+module.exports = {closeConnection, query}
