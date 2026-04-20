@@ -10,13 +10,13 @@ const dbConfig={
 
 const connection = new Pool(dbConfig)
 
-const closeConnection = async () => {
-    await connection.end()
+const query = (req, res) => {
+    return connection.query(req, res)
 }
 
-const query = async (req, res) => {
-    const res = await connection.query(req, res)
-    return res
+const closeConnection = async () => {
+    return connection.end()
 }
+
 
 module.exports = {closeConnection, query}
