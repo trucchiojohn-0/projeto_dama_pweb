@@ -3,17 +3,18 @@ const app = express();
 const cors = require('cors');
 app.use(express.json());
 app.use(cors());
-const dbConfig = require('./db/index.js')
-
+const db = require('./db/index.js')
 const port = 3000
 
+/* MÉTODO GET */
 app.get('/produtos', (req, res) => {
-    dbConfig.query('SELECT * FROM produtos ORDER BY id ASC')
+    db.query('SELECT * FROM produtos ORDER BY id ASC', [])
         .then((result) => {
             res.json(result.rows);
         })
         .catch((err) => {
-            res.status(500).json({ error: 'Erro ao buscar produtos.' });
+            console.error("Erro no GET /produtos:", err);
+            res.status(404).json({ error: 'Erro ao buscar produtos.' });
         });
 });
 
@@ -25,12 +26,13 @@ app.post('/produtos', (req, res) => {
         VALUES ($1, $2, $3, $4, $5) RETURNING *`;
     const values = [titulo, img_produto, marca, descricao, valor];
 
-    dbConfig.query(querySQL, values)
+    db.query(querySQL, values)
         .then((result) => {
             res.status(201).json(result.rows[0]);
         })
         .catch((err) => {
-            res.status(500).json({ error: 'O produto não foi inserido.' });
+            console.error("Erro no POST /produtos:", err);
+            res.status(404).json({ error: 'O produto não foi inserido.' });
         });
 });
 
